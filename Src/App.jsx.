@@ -1,0 +1,285 @@
+import { useState } from “react”;
+
+const GOOGLE_FONTS = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');`;
+
+const WHATSAPP_NUMBER = “18768982713”;
+
+const VALID_CODES = [“BIGSIS1”,“BIGSIS2”,“BIGSIS3”,“SISTA01”,“SISTA02”,“JAMSIS1”,“JAMSIS2”,“WELCOME1”,“WELCOME2”,“SAFEHER”];
+
+const RULES = [
+“Women only — this is a strictly female space”,
+“Jamaican women only”,
+“Must be 18 or older”,
+“Respect everyone’s story — no judgment, no mockery”,
+“What is shared here stays here — full confidentiality”,
+“No hate speech, bullying or negativity”,
+“No anonymous connections — you must share your story to be matched”,
+“This is peer support, not therapy — seek professional help if in crisis”,
+“Be kind, be real, be supportive”,
+“Always remember, you are not alone”,
+];
+
+const styles = `
+${GOOGLE_FONTS}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: ‘DM Sans’, sans-serif; background: #FCE8EF; }
+  :root {
+  –light-pink: #FCE8EF;
+  –soft-pink: #F4B8C8;
+  –mid-pink: #EFA0B5;
+  –rose-pink: #E8336D;
+  –deep-pink: #C4185A;
+  –blush: #FDF0F4;
+  –brown: #3D1F14;
+  –muted: #9B6B7E;
+  –whatsapp: #25D366;
+  }
+  .app { min-height: 100vh; font-family: ‘DM Sans’, sans-serif; max-width: 430px; margin: 0 auto; background: var(–light-pink); }
+
+/* HERO */
+.hero {
+background: linear-gradient(160deg, #F4B8C8 0%, #EFA0B5 50%, #E88AAD 100%);
+padding: 64px 32px 52px;
+text-align: center;
+position: relative;
+overflow: hidden;
+}
+.hero::before { content: ‘’; position: absolute; width: 300px; height: 300px; background: rgba(255,255,255,0.25); border-radius: 50%; top: -100px; right: -80px; }
+.hero::after { content: ‘’; position: absolute; width: 200px; height: 200px; background: rgba(255,255,255,0.15); border-radius: 50%; bottom: -60px; left: -60px; }
+
+.logo { font-family: ‘Playfair Display’, serif; font-size: 58px; font-weight: 700; letter-spacing: -2px; line-height: 1; margin-bottom: 10px; position: relative; z-index: 1; }
+.logo-big { color: #3D1F14; }
+.logo-sis { color: var(–rose-pink); font-style: italic; }
+
+.tagline { font-size: 12px; color: rgba(61,31,20,0.6); letter-spacing: 4px; text-transform: uppercase; font-weight: 300; margin-bottom: 24px; position: relative; z-index: 1; }
+
+.badge {
+display: inline-block;
+background: rgba(255,255,255,0.4);
+border: 1px solid rgba(255,255,255,0.6);
+border-radius: 50px;
+padding: 8px 20px;
+font-size: 12px;
+color: var(–deep-pink);
+font-weight: 600;
+letter-spacing: 1px;
+text-transform: uppercase;
+position: relative;
+z-index: 1;
+}
+
+.body { padding: 28px 20px 40px; }
+
+/* CARDS */
+.card { background: var(–blush); border-radius: 20px; padding: 26px; margin-bottom: 18px; box-shadow: 0 2px 14px rgba(232,51,109,0.08); border: 1px solid rgba(232,51,109,0.1); }
+.card-top-border { border-top: 3px solid var(–soft-pink); }
+
+.card-label { font-size: 11px; font-weight: 700; color: var(–rose-pink); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px; }
+.card p { font-size: 14px; color: #5C3040; line-height: 1.9; font-weight: 300; }
+.card p + p { margin-top: 12px; }
+
+.rules-title { font-family: ‘Playfair Display’, serif; font-size: 18px; color: var(–brown); margin-bottom: 20px; font-weight: 600; }
+.rule-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(–soft-pink); }
+.rule-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.rule-num {
+background: var(–soft-pink);
+color: white;
+width: 22px; height: 22px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 11px;
+font-weight: 700;
+flex-shrink: 0;
+margin-top: 1px;
+}
+.rule-num.last { background: var(–rose-pink); }
+.rule-text { font-size: 13px; color: #6B4055; line-height: 1.6; flex: 1; }
+.rule-text.last { color: var(–rose-pink); font-weight: 600; font-style: italic; }
+
+.crisis-card { background: #FDF0F4; border-radius: 16px; padding: 18px 20px; margin-bottom: 18px; border: 1px solid var(–soft-pink); }
+.crisis-card p { font-size: 13px; color: var(–muted); line-height: 1.7; }
+.crisis-card strong { color: var(–rose-pink); font-weight: 600; }
+
+/* INVITE SECTION */
+.invite-section {
+background: linear-gradient(145deg, #F4B8C8, #EFA0B5, #E88AAD);
+border-radius: 24px;
+padding: 30px 24px;
+margin-bottom: 20px;
+text-align: center;
+box-shadow: 0 4px 20px rgba(232,51,109,0.15);
+}
+.invite-section h3 { font-family: ‘Playfair Display’, serif; font-size: 22px; color: var(–brown); margin-bottom: 8px; font-weight: 600; }
+.invite-section p { font-size: 13px; color: rgba(61,31,20,0.6); margin-bottom: 22px; line-height: 1.6; }
+
+.code-input { width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.55); color: var(–brown); font-size: 20px; font-family: ‘DM Sans’, sans-serif; text-align: center; letter-spacing: 5px; outline: none; margin-bottom: 14px; text-transform: uppercase; transition: all 0.2s; }
+.code-input::placeholder { color: rgba(61,31,20,0.3); letter-spacing: 2px; font-size: 13px; }
+.code-input:focus { border-color: var(–rose-pink); background: rgba(255,255,255,0.8); }
+
+.code-error { color: #C0392B; font-size: 13px; margin-bottom: 12px; background: rgba(255,255,255,0.4); padding: 8px 12px; border-radius: 8px; }
+.code-success { color: #1a6b3a; font-size: 13px; margin-bottom: 20px; font-weight: 600; background: rgba(255,255,255,0.5); padding: 10px 12px; border-radius: 10px; }
+
+.verify-btn { background: var(–rose-pink); color: white; border: none; padding: 16px; border-radius: 50px; font-size: 15px; font-weight: 700; font-family: ‘DM Sans’, sans-serif; cursor: pointer; width: 100%; transition: all 0.2s; letter-spacing: 0.3px; }
+.verify-btn:hover { background: var(–deep-pink); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,51,109,0.3); }
+
+.form-section { text-align: left; margin-bottom: 20px; }
+.form-section-title { font-family: ‘Playfair Display’, serif; font-size: 16px; color: var(–brown); margin-bottom: 6px; }
+.form-section-sub { font-size: 12px; color: rgba(61,31,20,0.5); margin-bottom: 18px; line-height: 1.5; }
+.form-label { font-size: 11px; font-weight: 700; color: var(–deep-pink); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; display: block; }
+.form-field { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.6); background: rgba(255,255,255,0.55); color: var(–brown); font-size: 14px; font-family: ‘DM Sans’, sans-serif; outline: none; margin-bottom: 16px; transition: all 0.2s; }
+.form-field::placeholder { color: rgba(61,31,20,0.3); }
+.form-field:focus { border-color: var(–rose-pink); background: rgba(255,255,255,0.85); }
+.form-textarea { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.6); background: rgba(255,255,255,0.55); color: var(–brown); font-size: 14px; font-family: ‘DM Sans’, sans-serif; outline: none; margin-bottom: 16px; resize: none; min-height: 90px; transition: all 0.2s; }
+.form-textarea::placeholder { color: rgba(61,31,20,0.3); }
+.form-textarea:focus { border-color: var(–rose-pink); background: rgba(255,255,255,0.85); }
+
+.divider-line { height: 1px; background: rgba(255,255,255,0.4); margin: 20px 0; }
+
+.wa-btn { display: flex; align-items: center; justify-content: center; gap: 12px; background: var(–whatsapp); color: white; border: none; padding: 18px; border-radius: 50px; font-size: 15px; font-weight: 700; font-family: ‘DM Sans’, sans-serif; cursor: pointer; width: 100%; transition: all 0.2s; text-decoration: none; letter-spacing: 0.3px; animation: glow 2.5s infinite; }
+.wa-btn:hover { transform: translateY(-2px); }
+.wa-btn.disabled { opacity: 0.4; pointer-events: none; animation: none; }
+@keyframes glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0.5); } 50% { box-shadow: 0 0 0 10px rgba(37,211,102,0); } }
+
+/* FOOTER */
+.footer {
+background: linear-gradient(160deg, #F4B8C8 0%, #EFA0B5 100%);
+text-align: center;
+padding: 24px 24px 36px;
+color: rgba(61,31,20,0.6);
+font-size: 11px;
+line-height: 1.9;
+letter-spacing: 0.3px;
+border-top: 1px solid rgba(232,51,109,0.15);
+}
+.footer strong { color: var(–rose-pink); font-weight: 700; }
+`;
+
+export default function BigSisApp() {
+const [code, setCode] = useState(””);
+const [error, setError] = useState(””);
+const [verified, setVerified] = useState(false);
+const [name, setName] = useState(””);
+const [age, setAge] = useState(””);
+const [struggle, setStruggle] = useState(””);
+
+const verify = () => {
+if (VALID_CODES.includes(code.trim().toUpperCase())) {
+setError(””);
+setVerified(true);
+} else {
+setError(“That code is not valid. Please check with the person who invited you.”);
+}
+};
+
+const formComplete = name.trim() && age.trim() && struggle.trim();
+
+const waMessage = encodeURIComponent(
+`Hello, I would like to join the Big Sis community.\n\n` +
+`--- My Information ---\n` +
+`Name: ${name || "___"}\n` +
+`Age: ${age || "___"}\n` +
+`What I am struggling with: ${struggle || "___"}\n\n` +
+`--- Community Standards Agreement ---\n` +
+`I have read and I fully agree to the following:\n\n` +
+RULES.map((r, i) => `${i + 1}. ${r}`).join(”\n”) +
+`\n\nPlease add me to the group. I am ready to connect with a sister who understands.`
+);
+
+const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
+
+return (
+<>
+<style>{styles}</style>
+<div className="app">
+
+```
+    <div className="hero">
+      <div className="logo">
+        <span className="logo-big">Big </span>
+        <span className="logo-sis">Sis</span>
+      </div>
+      <div className="tagline">A Jamaican Safe Space for Women</div>
+      <div className="badge">Strictly for Jamaican Women</div>
+    </div>
+
+    <div className="body">
+
+      <div className="card card-top-border">
+        <div className="card-label">Our Story</div>
+        <p>Across Jamaica, there are women carrying weight that was never meant to be carried alone. Financial pressure. The silent exhaustion of single motherhood. The quiet grief of losing your sense of self. The isolation that comes when your closest friends no longer understand your reality.</p>
+        <p>Big Sis was created out of that recognition — that too many Jamaican women are navigating their most difficult seasons without a single person to truly confide in. Not because they are weak, but because the right space simply did not exist.</p>
+        <p>This is that space. A private, judgment-free community where Jamaican women are matched with a sister who understands — someone who has walked a similar path and is willing to walk alongside you. No performance. No pretending. Just honest, human connection.</p>
+      </div>
+
+      <div className="card card-top-border">
+        <div className="rules-title">Community Standards</div>
+        {RULES.map((rule, i) => (
+          <div className="rule-item" key={i}>
+            <div className={`rule-num ${i === RULES.length - 1 ? "last" : ""}`}>{i + 1}</div>
+            <div className={`rule-text ${i === RULES.length - 1 ? "last" : ""}`}>{rule}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="crisis-card">
+        <p><strong>Please note:</strong> Big Sis is a peer support community and does not replace professional mental health care. If you are experiencing a crisis or serious trauma, we strongly encourage you to also seek support from a licensed mental health professional or crisis line. You are deserving of every form of help available to you.</p>
+      </div>
+
+      <div className="invite-section">
+        <h3>Join the Sisterhood</h3>
+        <p>This is a private community. Enter your invite code, complete your details, and connect with us on WhatsApp.</p>
+
+        {!verified ? (
+          <>
+            <input className="code-input" placeholder="Enter invite code" value={code}
+              onChange={e => setCode(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && verify()} />
+            {error && <div className="code-error">{error}</div>}
+            <button className="verify-btn" onClick={verify}>Verify Code</button>
+          </>
+        ) : (
+          <>
+            <div className="code-success">Code verified. Welcome, sis.</div>
+            <div className="form-section">
+              <div className="form-section-title">Tell us about yourself</div>
+              <div className="form-section-sub">This information will be sent with your WhatsApp message so we can match you with the right sister.</div>
+              <label className="form-label">Your Name</label>
+              <input className="form-field" placeholder="Enter your first name" value={name} onChange={e => setName(e.target.value)} />
+              <label className="form-label">Your Age</label>
+              <input className="form-field" placeholder="Enter your age" type="number" min="18" value={age} onChange={e => setAge(e.target.value)} />
+              <label className="form-label">What are you struggling with?</label>
+              <textarea className="form-textarea" placeholder="Share briefly what you are going through. This helps us find the right match for you." value={struggle} onChange={e => setStruggle(e.target.value)} />
+            </div>
+            <div className="divider-line" />
+            <a
+              className={`wa-btn ${!formComplete ? "disabled" : ""}`}
+              href={formComplete ? waLink : undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={e => { if (!formComplete) e.preventDefault(); }}
+            >
+              <span style={{fontSize:22}}>💚</span>
+              {formComplete ? "Send to Big Sis on WhatsApp" : "Complete your details above"}
+            </a>
+          </>
+        )}
+      </div>
+
+    </div>
+
+    <div className="footer">
+      <strong>Big Sis</strong> — A Safe Space for Jamaican Women<br/>
+      By joining you agree to our community standards.<br/>
+      All conversations are held in the strictest confidence.
+    </div>
+
+  </div>
+</>
+```
+
+);
+}
